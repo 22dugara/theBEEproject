@@ -20,6 +20,20 @@ public class Node {
         this.blocked = blocked;
     }
 
+    public void calcfCost() {
+        this.fCost = this.gCost + this.hCost;
+    }
+
+    public double distance(Node s){//Needs to be done
+        //return the distance between this node and Node S
+        double distance = 0;
+        return distance;
+    }
+
+    public boolean equals(Node s){//Needs to be done
+        boolean equals = true;
+        return equals;
+    }
     public Node getParent() {
         return parent;
     }
@@ -84,3 +98,4 @@ public class Node {
         this.fCost = fCost;
     }
 }
+
