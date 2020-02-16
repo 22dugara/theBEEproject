@@ -1,15 +1,16 @@
 package com.company;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 
 public class PathFinder {
     private Hashtable<int[], Node> Nodes;
     //Creates the set of nodes of which the path finding algorithim will use.
     // The Key is an int array representing coordinates. the Value is the Node object
-    private ArrayList<Node> open;
-    private ArrayList<Node> closed;
-    private ArrayList<Node> path;
+    private ArrayList<Node> open = new ArrayList<Node>();
+    private ArrayList<Node> closed = new ArrayList<Node>();
+    private ArrayList<Node> path= new ArrayList<Node>();
     private Node start;
     private Node[] endNodes;
     private Node goalNode;
@@ -39,20 +40,23 @@ public class PathFinder {
         open.add(start);
         while(true){
         current = findLowestFcost(open);
-        System.out.printf("Current node is" + current);
+        System.out.println("Current node is" + current);
         open.remove(current);
         closed.add(current);
         if(current.equals(goalNode)){
             System.out.println("Goal reached");
             break;
         }
-            ArrayList<Node> neigbors = findNeighbors(current);
+        ArrayList<Node> neigbors = findNeighbors(current);
+            System.out.println(neigbors.size());
         for(int x = 0; x < neigbors.size(); x++){
+            System.out.println("Neigbor" + x + neigbors.get(x));
             if(neigbors.get(x).blocked == false && closed.contains(neigbors.get(x)) == false){
                 if(neigbors.get(x).gethCost() > current.gethCost() + 1 || open.contains(neigbors.get(x)) == false){
                     CalcFcost(neigbors.get(x));
                     neigbors.get(x).setParent(current);
                     if(open.contains(neigbors.get(x)) == false){
+                        System.out.println("Adding Neighbors");
                         open.add(neigbors.get(x));
                     }
                 }
@@ -128,11 +132,24 @@ public class PathFinder {
         placeholder[23] = new int[]{-1,-1,1};
         placeholder[24] = new int[]{-1,-1,0};
         placeholder[25] = new int[]{-1,-1,-1};
+
+
         for(int x = 0; x < 26; x++){
-            if(Nodes.containsKey(placeholder[x])) {
-                neighbors.add(Nodes.get(placeholder[x]));
+
+
+            if(contains(new int[]{c.getX()+ placeholder[x][0],c.getY()+ placeholder[x][1], c.getZ()+ placeholder[x][2] })) {
+                System.out.println("Adding Neihbor");
+                neighbors.add(Nodes.get(new int[]{c.getX()+ placeholder[x][0],c.getY()+ placeholder[x][1], c.getZ()+ placeholder[x][2] }));
             }
         }
         return neighbors;
+    }
+    public boolean contains(int[] c){
+        for (int[] key : Nodes.keySet()) {
+            if(Arrays.equals(key,c)){
+                return true;
+            }
+        }
+        return false;
     }
 }
