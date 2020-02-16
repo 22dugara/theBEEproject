@@ -20,18 +20,30 @@ public class Node {
         this.blocked = blocked;
     }
 
+    public String toString(){
+        String response = "Point " + this.x + ","+ this.y + ","+ this.z;
+        return response;
+    }
+
     public void calcfCost() {
         this.fCost = this.gCost + this.hCost;
     }
 
-    public double distance(Node s){//Needs to be done
+    public double distance(Node s){
         //return the distance between this node and Node S
         double distance = 0;
+        distance = Math.abs(s.x - this.x) + Math.abs(s.y - this.y) + Math.abs(s.z - this.z);
         return distance;
     }
 
-    public boolean equals(Node s){//Needs to be done
-        boolean equals = true;
+    public boolean equals(Node s){
+        boolean equals;
+        if(this.x == s.x && this.y == s.y && this.z == s.z){
+            equals = true;
+        }
+        else{
+            equals = false;
+        }
         return equals;
     }
     public Node getParent() {
