@@ -15,6 +15,7 @@ public class PathFinder {
     private Node start;
     private Node[] endNodes;
     private Node goalNode;
+    private double moves = 0;
 
     public PathFinder(Hashtable<List<Integer>, Node> nodes, Node start, Node[] endNodes) {
         Nodes = nodes;
@@ -35,24 +36,28 @@ public class PathFinder {
         }
     }
 
-    public ArrayList<Node> calcPath(){
-        System.out.println("Starting PathFinding");
+    public double getMoves() {
+        return moves;
+    }
+
+    public void calcPath(){
+        //System.out.println("Starting PathFinding");
         Node current;
         open.add(start);
         while(true){
         current = findLowestFcost(open);
-        System.out.println("Current node is" + current);
+        //System.out.println("Current node is" + current);
         open.remove(current);
         closed.add(current);
         if(current.equals(goalNode)){
-            System.out.println("Goal reached");
+            //System.out.println("Goal reached");
             break;
         }
         ArrayList<Node> neigbors = findNeighbors(current);
             //System.out.println(neigbors.get(0));
         for(int x = 0; x < neigbors.size(); x++){
            // System.out.println("Neigbor" + x + neigbors.get(x));
-            if(neigbors.get(x).blocked == false && closed.contains(neigbors.get(x)) == false){
+            if((neigbors.get(x).blocked == false || neigbors.get(x).equals(goalNode)) && closed.contains(neigbors.get(x)) == false){
                 if(neigbors.get(x).gethCost() > current.gethCost() + 1 || open.contains(neigbors.get(x)) == false){
                     neigbors.get(x).setParent(current);
                     CalcFcost(neigbors.get(x));
@@ -76,7 +81,8 @@ public class PathFinder {
                 break;
             }
         }
-       return path;
+        this.moves = (path.size()-1);
+
     }
 
     public Node findLowestFcost(ArrayList<Node> list){
@@ -149,7 +155,19 @@ public class PathFinder {
         }
         return neighbors;
     }
-    /*public boolean contains(int[] c){//needs to be tuned
+
+    public Node getGoalNode() {
+        return goalNode;
+    }
+
+    public Node getStart() {
+        return start;
+    }
+
+    public void setStart(Node start) {
+        this.start = start;
+    }
+/*public boolean contains(int[] c){//needs to be tuned
         for (int[] key : Nodes.keySet()) {
             if(Arrays.equals(key,c)){
                 return true;
