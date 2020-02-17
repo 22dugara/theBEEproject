@@ -3,9 +3,10 @@ import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 
 public class PathFinder {
-    private Hashtable<int[], Node> Nodes;
+    private Hashtable<List<Integer>, Node> Nodes;
     //Creates the set of nodes of which the path finding algorithim will use.
     // The Key is an int array representing coordinates. the Value is the Node object
     private ArrayList<Node> open = new ArrayList<Node>();
@@ -15,7 +16,7 @@ public class PathFinder {
     private Node[] endNodes;
     private Node goalNode;
 
-    public PathFinder(Hashtable<int[], Node> nodes, Node start, Node[] endNodes) {
+    public PathFinder(Hashtable<List<Integer>, Node> nodes, Node start, Node[] endNodes) {
         Nodes = nodes;
         this.start = start;
         this.start.sethCost(0);
@@ -48,15 +49,16 @@ public class PathFinder {
             break;
         }
         ArrayList<Node> neigbors = findNeighbors(current);
-            System.out.println(neigbors.size());
+            //System.out.println(neigbors.get(0));
         for(int x = 0; x < neigbors.size(); x++){
-            System.out.println("Neigbor" + x + neigbors.get(x));
+           // System.out.println("Neigbor" + x + neigbors.get(x));
             if(neigbors.get(x).blocked == false && closed.contains(neigbors.get(x)) == false){
                 if(neigbors.get(x).gethCost() > current.gethCost() + 1 || open.contains(neigbors.get(x)) == false){
-                    CalcFcost(neigbors.get(x));
                     neigbors.get(x).setParent(current);
+                    CalcFcost(neigbors.get(x));
+                    //System.out.println("here");
                     if(open.contains(neigbors.get(x)) == false){
-                        System.out.println("Adding Neighbors");
+                        //System.out.println("Open Set additon");
                         open.add(neigbors.get(x));
                     }
                 }
@@ -78,9 +80,11 @@ public class PathFinder {
     }
 
     public Node findLowestFcost(ArrayList<Node> list){
-
         Node lowestFcost = list.get(0);
-        for(int x = 1; x < list.size(); x++){
+        for(int x = 0; x < list.size(); x++){
+           /* System.out.println(list.get(x));
+            System.out.println(list.get(x).getfCost());
+            System.out.println(list.get(x).getgCost());*/
             if(lowestFcost.getfCost() > list.get(x).getfCost()){
                 lowestFcost = list.get(x);
             }
@@ -103,7 +107,7 @@ public class PathFinder {
     }
 
     public ArrayList<Node> findNeighbors(Node c){//Needs to be done
-        System.out.println("Updating Neigbors for" + c);
+        //System.out.println("Updating Neigbors for" + c);
         ArrayList<Node> neighbors = new ArrayList<Node>();
         int[][] placeholder = new int[26][3];
         placeholder[0] = new int[]{1,1,1};
@@ -137,19 +141,20 @@ public class PathFinder {
         for(int x = 0; x < 26; x++){
 
 
-            if(contains(new int[]{c.getX()+ placeholder[x][0],c.getY()+ placeholder[x][1], c.getZ()+ placeholder[x][2] })) {
-                System.out.println("Adding Neihbor");
-                neighbors.add(Nodes.get(new int[]{c.getX()+ placeholder[x][0],c.getY()+ placeholder[x][1], c.getZ()+ placeholder[x][2] }));
+            if(Nodes.containsKey(Arrays.asList(c.getX()+ placeholder[x][0],c.getY()+ placeholder[x][1], c.getZ()+ placeholder[x][2]))) {
+                //System.out.println("Adding Neihbor");
+                //System.out.println(Nodes.get(Arrays.asList(c.getX()+ placeholder[x][0],c.getY()+ placeholder[x][1], c.getZ()+ placeholder[x][2])));
+                neighbors.add(Nodes.get(Arrays.asList(c.getX()+ placeholder[x][0],c.getY()+ placeholder[x][1], c.getZ()+ placeholder[x][2])));
             }
         }
         return neighbors;
     }
-    public boolean contains(int[] c){
+    /*public boolean contains(int[] c){//needs to be tuned
         for (int[] key : Nodes.keySet()) {
             if(Arrays.equals(key,c)){
                 return true;
             }
         }
         return false;
-    }
+    }*/
 }
