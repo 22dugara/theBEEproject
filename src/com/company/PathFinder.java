@@ -23,17 +23,24 @@ public class PathFinder {
         this.start.sethCost(0);
         this.start.setfCost(0);
         this.endNodes = endNodes;
-        calcGoalNode();
+
     }
 
     public void calcGoalNode(){//Needs to be done
         //CalcGoalNode based on which out of the 15 is closest. This is a flawed way of selecting. But we can imporve this later
+        Node placeholder = endNodes[0];
         this.goalNode = endNodes[0];
+        calcPath();
+        double valtobeat = moves;
         for(int x = 0; x < endNodes.length; x++){
-            if(this.goalNode.distance(this.start) > endNodes[x].distance(this.start)){
-                this.goalNode = endNodes[x];
+            this.goalNode = endNodes[x];
+            calcPath();
+            if(valtobeat > this.moves){
+                placeholder = endNodes[x];
+                valtobeat = this.moves;
             }
         }
+        this.goalNode = placeholder;
     }
 
     public double getMoves() {
@@ -42,6 +49,9 @@ public class PathFinder {
 
     public void calcPath(){
         //System.out.println("Starting PathFinding");
+        open = new ArrayList<Node>();
+        closed = new ArrayList<Node>();
+        path = new ArrayList<Node>();
         Node current;
         open.add(start);
         while(true){
@@ -81,7 +91,7 @@ public class PathFinder {
                 break;
             }
         }
-        this.moves = (path.size()-1);
+        this.moves = (path.size());
 
     }
 
